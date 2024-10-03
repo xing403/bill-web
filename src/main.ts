@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 
 import router from './router'
+import store from './pinia'
 import App from './App.vue'
 import '@unocss/reset/tailwind.css'
 import 'uno.css'
@@ -18,6 +19,7 @@ app.use(ElementPlus, {
   locale: EPZhCN
 })
 
+app.use(store)
 app.use(router)
 
 app.mount('#app')

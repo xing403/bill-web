@@ -7,7 +7,9 @@ export function login(data: { username: string, password: string }) {
   return api.post('/login', form)
 }
 
+export const register = (data: { username: string, password: string }) => api.post('/register', data);
 
 export default {
-  login
+  login,
+  register
 }

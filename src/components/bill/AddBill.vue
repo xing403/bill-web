@@ -1,0 +1,70 @@
+<script setup lang="ts">
+import billApi from '~/api/modules/bill'
+const props = defineProps<{
+  modelValue?: boolean,
+  onClose: () => void
+}>()
+const emit = defineEmits(['update:modelValue'])
+const model = toRef(props, 'modelValue')
+const formRef = ref()
+const form = ref({
+  billTitle: '',
+  billAmount: null,
+  billType: '',
+  billTime: ''
+})
+const rules = {
+  billTitle: [{ required: true, message: '请输入账单标题', trigger: 'blur' }],
+  billAmount: [
+    { required: true, message: '请输入账单金额', trigger: 'blur' },
+    { type: 'number', message: '请输入数字' },
+    { type: 'number', min: 0, message: '请输入大于0的数字' }
+  ],
+  billType: [{ required: true, message: '请选择账单类型', trigger: 'blur' }],
+  billTime: [{ required: true, message: '请选择账单日期', trigger: 'blur' }]
+}
+const handleAddBill = () => {
+  formRef.value.validate(valid => {
+    if (valid) {
+      billApi.addBill(form.value).then(() => {
+        ElMessage.success('添加成功')
+        handleClose()
+      })
+    }
+  })
+}
+const handleClose = () => {
+  formRef.value?.resetFields()
+  emit('update:modelValue', false)
+}
+</script>
+
+<template>
+  <el-dialog title="新增账单" v-model="model" :before-close="handleClose" :close-on-press-escape="false"
+    :close-on-click-modal="false">
+    <el-form :model="form" ref="formRef" :rules="rules" label-position="top">
+      <el-form-item label="账单标题" prop="billTitle">
+        <el-input v-model="form.billTitle" />
+      </el-form-item>
+      <el-form-item label="账单金额" prop="billAmount">
+        <el-input-number v-model="form.billAmount" :min="0" :controls="true" />
+      </el-form-item>
+      <el-form-item label="账单日期" prop="billTime">
+        <el-date-picker v-model="form.billTime" placeholder="选择日期时间" type="date" value-format="YYYY-MM-DD HH:mm:ss" />
+      </el-form-item>
+      <el-form-item label="账单类型" prop="billType">
+        <el-radio-group v-model="form.billType">
+          <el-radio value="income">收入</el-radio>
+          <el-radio value="spend">支出</el-radio>
+        </el-radio-group>
+      </el-form-item>
+    </el-form>
+
+    <template #footer>
+      <span>
+        <el-button @click="handleClose">取消</el-button>
+        <el-button type="primary" @click="handleAddBill">确认</el-button>
+      </span>
+    </template>
+  </el-dialog>
+</template>

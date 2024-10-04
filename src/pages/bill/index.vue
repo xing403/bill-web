@@ -43,7 +43,7 @@ onMounted(() => {
       </div>
     </div>
     <AddBill v-model="showAddBill" :on-close="handleGetBillList" />
-    <el-table :load="loading" :data="list" border stripe width="100%" row-key="billId">
+    <el-table v-loading="loading" :data="list" border stripe width="100%" row-key="billId">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column type="index" width="80" label="编号" align="center" />
       <el-table-column label="标题" prop="billTitle" />

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import {ElMessage} from 'element-plus'
 import billApi from '~/api/modules/bill'
 const props = defineProps<{
   modelValue?: boolean,

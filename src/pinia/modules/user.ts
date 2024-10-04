@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import userApi from '~/api/modules/user'
 
 export default defineStore('user', () => {
+  const router = useRouter()
 
   const token = ref(useLocalStorage('token', null, { deep: true }))
   const userIsLogin = computed(() => !!token.value)
@@ -10,10 +11,30 @@ export default defineStore('user', () => {
       token.value = data
     })
   }
+  const reLogin = () => {
+    token.value = null
+    router.replace({
+      name: 'login',
+      query: {
+        redirect: router.currentRoute.value.fullPath
+      }
+    })
+  }
+  const handleUserLogout = () => {
+    return userApi.logout().then(() => {
+      reLogin()
+    }).catch((err) => {
+      if (err.code === 400) {
+
+      }
+    })
+  }
 
   return {
     token,
     userIsLogin,
-    handleUserLogin
+    reLogin,
+    handleUserLogin,
+    handleUserLogout
   }
 })

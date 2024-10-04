@@ -9,7 +9,10 @@ export function login(data: { username: string, password: string }) {
 
 export const register = (data: { username: string, password: string }) => api.post('/register', data);
 
+export const logout = () => api.post('/logout')
+
 export default {
   login,
-  register
+  register,
+  logout,
 }

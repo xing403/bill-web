@@ -1,4 +1,6 @@
 import axios from 'axios'
+import { ElMessage } from 'element-plus'
+import useUserStore from '~/pinia/modules/user'
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_URL,
@@ -19,6 +21,11 @@ api.interceptors.response.use((response) => {
     const { data } = response
     if (data.code === 200) {
       resolve(data)
+    } else if (data.code === 400) {
+      ElMessage.error(data.message ?? data.msg)
+      const userStore = useUserStore()
+      userStore.reLogin()
+      reject(data.message ?? data.msg)
     } else {
       reject(data.message ?? data.msg)
     }

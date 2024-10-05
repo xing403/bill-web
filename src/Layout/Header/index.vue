@@ -20,7 +20,7 @@ const handleCommand = (command: string) => {
     <div flex items-end gap-2>
       <RightTool />
       <el-dropdown trigger="click" @command="handleCommand">
-        <el-avatar fit="fill">A</el-avatar>
+        <el-avatar fit="fill">{{ userStore.information?.username || '未命名' }}</el-avatar>
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item command="logout">退出登录</el-dropdown-item>

@@ -11,8 +11,11 @@ export const register = (data: { username: string, password: string }) => api.po
 
 export const logout = () => api.post('/logout')
 
+export const getUserInfo = () => api.get('/user/information')
+
 export default {
   login,
   register,
   logout,
+  getUserInfo,
 }

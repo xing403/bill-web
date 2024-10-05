@@ -5,14 +5,24 @@ export default defineStore('user', () => {
   const router = useRouter()
 
   const token = ref(useLocalStorage('token', null, { deep: true }))
+  const information = ref<any>(null)
+
   const userIsLogin = computed(() => !!token.value)
   const handleUserLogin = ({ username, password }: { username: string, password: string }) => {
     return userApi.login({ username, password }).then(({ data }) => {
       token.value = data
     })
   }
+
+  const getUserInformation = () => {
+    return userApi.getUserInfo().then(({ data }) => {
+      information.value = data
+    })
+  }
+
   const reLogin = () => {
     token.value = null
+    information.value = null
     router.replace({
       name: 'login',
       query: {
@@ -20,6 +30,7 @@ export default defineStore('user', () => {
       }
     })
   }
+
   const handleUserLogout = () => {
     return userApi.logout().then(() => {
       reLogin()
@@ -33,8 +44,10 @@ export default defineStore('user', () => {
   return {
     token,
     userIsLogin,
+    information,
     reLogin,
     handleUserLogin,
-    handleUserLogout
+    handleUserLogout,
+    getUserInformation
   }
 })

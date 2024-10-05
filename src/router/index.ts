@@ -9,21 +9,20 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const userStore = useUserStore()
   useTitle(pkj.name ?? '未命名')
   if (userStore.userIsLogin) {
+    if (!userStore.information) {
+      await userStore.getUserInformation()
+    }
     if (to.name !== 'login') {
       next()
     } else {
       next({ path: '/' })
     }
   } else {
-    if (to.path === '/login') {
-      next()
-    } else {
-      next({ name: 'login' })
-    }
+    to.path === '/login' ? next() : next({ name: 'login' })
   }
 })
 

@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import {ElMessage} from 'element-plus'
+import { ElMessage } from 'element-plus'
 import billApi from '~/api/modules/bill'
 const props = defineProps<{
+  modelValue: number,
   open: boolean,
   onClose: () => void
 }>()
@@ -24,16 +25,23 @@ const rules = {
   billType: [{ required: true, message: '请选择账单类型', trigger: 'blur' }],
   billTime: [{ required: true, message: '请选择账单日期', trigger: 'blur' }]
 }
-const handleAddBill = () => {
+const handleUpdateBill = () => {
   formRef.value.validate(valid => {
     if (valid) {
-      billApi.addBill(form.value).then(() => {
+      billApi.editBill(form.value).then(() => {
         ElMessage.success('添加成功')
         handleClose()
       })
     }
   })
 }
+watchEffect(() => {
+  if (props.open) {
+    billApi.getBillDetail(props.modelValue).then(({ data }) => {
+      form.value = data
+    })
+  }
+})
 const handleClose = () => {
   formRef.value?.resetFields()
   props.onClose()
@@ -42,7 +50,7 @@ const handleClose = () => {
 </script>
 
 <template>
-  <el-dialog title="新增账单" v-model="model" :before-close="handleClose" :close-on-press-escape="false"
+  <el-dialog title="编辑账单" v-model="model" :before-close="handleClose" :close-on-press-escape="false"
     :close-on-click-modal="false">
     <el-form :model="form" ref="formRef" :rules="rules" label-position="top">
       <el-form-item label="账单标题" prop="billTitle">
@@ -65,7 +73,7 @@ const handleClose = () => {
     <template #footer>
       <span>
         <el-button @click="handleClose">取消</el-button>
-        <el-button type="primary" @click="handleAddBill">确认</el-button>
+        <el-button type="primary" @click="handleUpdateBill">确认</el-button>
       </span>
     </template>
   </el-dialog>

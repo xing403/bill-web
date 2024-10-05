@@ -7,6 +7,8 @@ const pageSize = ref(10);
 const total = ref(0)
 const list = ref([])
 const showAddBill = ref(false)
+const showUpdateBill = ref(false)
+const updateBillId = ref(0)
 const loading = ref(false)
 const handleGetBillList = () => {
   if (loading.value) return
@@ -19,6 +21,11 @@ const handleGetBillList = () => {
     console.log(data)
     total.value = data.total
   }).finally(() => loading.value = false)
+}
+
+const handleUpdateBill = (billId: number) => {
+  updateBillId.value = billId
+  showUpdateBill.value = !showUpdateBill.value
 }
 const handleDeleteBill = (billId: number) => {
   billApi.deleteBill(billId).then(() => {
@@ -42,7 +49,6 @@ onMounted(() => {
         <el-button round @click="handleGetBillList">刷新列表</el-button>
       </div>
     </div>
-    <AddBill v-model="showAddBill" :on-close="handleGetBillList" />
     <el-table v-loading="loading" :data="list" border stripe width="100%" row-key="billId">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column type="index" width="80" label="编号" align="center" />
@@ -59,7 +65,7 @@ onMounted(() => {
         :formatter="(row: any) => dayjs(row.createTime).format('YYYY-MM-DD HH:mm:ss')" />
       <el-table-column label="操作" width="200" align="center">
         <template #default="{ row }">
-          <el-button type="warning" text link>编辑</el-button>
+          <el-button type="warning" text link @click="handleUpdateBill(row.billId)">编辑</el-button>
           <el-popconfirm title="确定删除吗" @confirm="handleDeleteBill(row.billId)">
             <template #reference>
               <el-button type="danger" text link>删除</el-button>
@@ -77,5 +83,9 @@ onMounted(() => {
       <el-pagination background layout="prev, pager, next" v-model:current-page="pageNum"
         @current-change="handleGetBillList" :total="total" :page-size="pageSize" />
     </div>
+
+
+    <AddBill v-model:open="showAddBill" :on-close="handleGetBillList" />
+    <UpdateBill v-model="updateBillId" v-model:open="showUpdateBill" :on-close="handleGetBillList" />
   </div>
 </template>

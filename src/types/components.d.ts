@@ -9,10 +9,13 @@ declare module 'vue' {
   export interface GlobalComponents {
     AddBill: typeof import('./../components/bill/AddBill.vue')['default']
     HelloWorld: typeof import('./../components/HelloWorld.vue')['default']
+    LineYear: typeof import('./../components/bill/statistic/LineYear.vue')['default']
     PageMain: typeof import('./../components/PageMain.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SwitchTheme: typeof import('./../components/SwitchTheme.vue')['default']
     UpdateBill: typeof import('./../components/bill/UpdateBill.vue')['default']
+    Year: typeof import('./../components/bill/statistic/Year.vue')['default']
+    YearCalendar: typeof import('./../components/bill/statistic/YearCalendar.vue')['default']
   }
 }

@@ -8,9 +8,8 @@ const router = useRouter()
 
 const userStore = useUserStore()
 
-const redirect = ref(route.params.redirect?.toString() ?? '/')
+const redirect = ref(route.query.redirect?.toString() ?? '/')
 const formType = ref<'login' | 'register'>('login')
-
 
 const loginForm = ref({
   username: '',
@@ -74,7 +73,8 @@ const handleRegisterUser = () => {
           <el-input v-model="loginForm.username" placeholder="请输入用户名" />
         </el-form-item>
         <el-form-item prop="password">
-          <el-input v-model="loginForm.password" type="password" placeholder="请输入密码" show-password />
+          <el-input v-model="loginForm.password" type="password" placeholder="请输入密码" show-password
+            @keydown.enter="handleLoginUser" />
         </el-form-item>
         <el-form-item>
           <span>还未有账号? </span>

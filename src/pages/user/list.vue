@@ -1,0 +1,70 @@
+<script setup lang="ts">
+import { dayjs } from 'element-plus'
+import userApi from '~/api/modules/user'
+
+const loading = ref(false)
+const pageNum = ref(1);
+const pageSize = ref(10);
+const total = ref(0)
+const list = ref([])
+const handleGetUserList = () => {
+  if (loading.value) return
+  loading.value = true
+  userApi.getUserList({
+    pageNum: pageNum.value,
+    pageSize: pageSize.value
+  }).then(({ data }) => {
+
+    list.value = data.data
+    total.value = data.total
+  }).finally(() => {
+    loading.value = false
+  })
+}
+
+onMounted(() => {
+  handleGetUserList()
+})
+
+</script>
+
+<template>
+  <div>
+    <div flex justify-between mb-4>
+      <div>
+        <el-button type="primary" round>新增账单</el-button>
+      </div>
+      <div>
+        <el-button round @click="handleGetUserList">刷新列表</el-button>
+      </div>
+    </div>
+
+    <el-table v-loading="loading" :data="list" border stripe width="100%" row-key="uuid">
+      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column type="index" width="80" label="编号" align="center" />
+      <el-table-column label="用户名" prop="username" width="120" align="center" />
+      <el-table-column label="昵称" prop="nickname" width="120" align="center" />
+      <el-table-column label="用户ID" prop="uuid" align="center" />
+      <el-table-column label="身份" prop="isAdmin" width="120" align="center">
+        <template #default="{ row }">
+          <el-tag v-if="row.isAdmin == '1'" type="warning">管理员</el-tag>
+          <el-tag v-else type="info">用户</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="创建时间" prop="createTime" width="180" align="center"
+        :formatter="(row: any) => dayjs(row.createTime).format('YYYY-MM-DD HH:mm:ss')" />
+      <el-table-column label="操作" width="200" align="center">
+        <template #default="">
+          <el-button type="info" text link>详情</el-button>
+        </template>
+      </el-table-column>
+      <template #empty>
+        <el-empty />
+      </template>
+    </el-table>
+    <div flex justify-end mt-4>
+      <el-pagination background layout="prev, pager, next" v-model:current-page="pageNum"
+        @current-change="handleGetUserList" :total="total" :page-size="pageSize" />
+    </div>
+  </div>
+</template>

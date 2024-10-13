@@ -4,7 +4,7 @@ import layout from '~/Layout/index.vue'
 const routes = [{
   path: '/',
   component: layout,
-  redirect: '/home',
+  redirect: 'home',
   children: [{
     path: 'home',
     name: 'home',
@@ -13,6 +13,19 @@ const routes = [{
     path: 'bill',
     name: 'bill',
     component: () => import('~/pages/bill/index.vue'),
+  }, {
+    path: 'user',
+    name: 'user',
+    redirect: 'user/list',
+    children: [{
+      path: 'list',
+      name: 'user-list',
+      component: () => import('~/pages/user/list.vue'),
+    }, {
+      path: 'login',
+      name: 'user-login',
+      component: () => import('~/pages/user/login.vue'),
+    }],
   }],
 }, {
   path: '/login',

@@ -18,7 +18,6 @@ const handleGetBillList = () => {
     pageSize: pageSize.value
   }).then(({ data }) => {
     list.value = data.data
-    console.log(data)
     total.value = data.total
   }).finally(() => loading.value = false)
 }

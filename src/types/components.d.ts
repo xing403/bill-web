@@ -8,6 +8,8 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AddBill: typeof import('./../components/bill/AddBill.vue')['default']
+    AddUser: typeof import('./../components/user/AddUser.vue')['default']
+    copy: typeof import('./../components/user/AddUser copy.vue')['default']
     HelloWorld: typeof import('./../components/HelloWorld.vue')['default']
     LineYear: typeof import('./../components/bill/statistic/LineYear.vue')['default']
     PageMain: typeof import('./../components/PageMain.vue')['default']
@@ -15,6 +17,7 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     SwitchTheme: typeof import('./../components/SwitchTheme.vue')['default']
     UpdateBill: typeof import('./../components/bill/UpdateBill.vue')['default']
+    UpdateUser: typeof import('./../components/user/UpdateUser.vue')['default']
     Year: typeof import('./../components/bill/statistic/Year.vue')['default']
     YearCalendar: typeof import('./../components/bill/statistic/YearCalendar.vue')['default']
   }

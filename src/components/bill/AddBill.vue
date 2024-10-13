@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ElMessage} from 'element-plus'
+import { ElMessage } from 'element-plus'
 import billApi from '~/api/modules/bill'
 const props = defineProps<{
   open: boolean,
@@ -25,7 +25,7 @@ const rules = {
   billTime: [{ required: true, message: '请选择账单日期', trigger: 'blur' }]
 }
 const handleAddBill = () => {
-  formRef.value.validate(valid => {
+  formRef.value.validate((valid: boolean) => {
     if (valid) {
       billApi.addBill(form.value).then(() => {
         ElMessage.success('添加成功')
@@ -36,7 +36,7 @@ const handleAddBill = () => {
 }
 const handleClose = () => {
   formRef.value?.resetFields()
-  props.onClose()
+  props?.onClose()
   emit('update:open', false)
 }
 </script>

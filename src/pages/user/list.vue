@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { dayjs } from 'element-plus'
+import { ElMessage, dayjs } from 'element-plus'
 import userApi from '~/api/modules/user'
 
 const loading = ref(false)
@@ -7,6 +7,8 @@ const pageNum = ref(1);
 const pageSize = ref(10);
 const total = ref(0)
 const list = ref([])
+
+const addUserDialog = ref(false);
 const handleGetUserList = () => {
   if (loading.value) return
   loading.value = true
@@ -21,7 +23,12 @@ const handleGetUserList = () => {
     loading.value = false
   })
 }
-
+const handleDeleteUser = (userId: number) => {
+  userApi.deleteUser(userId).then(() => {
+    ElMessage.success('删除成功')
+    handleGetUserList()
+  })
+}
 onMounted(() => {
   handleGetUserList()
 })
@@ -32,12 +39,14 @@ onMounted(() => {
   <div>
     <div flex justify-between mb-4>
       <div>
-        <el-button type="primary" round>新增账单</el-button>
+        <el-button type="primary" round @click="addUserDialog = true">新增用户</el-button>
       </div>
       <div>
         <el-button round @click="handleGetUserList">刷新列表</el-button>
       </div>
     </div>
+
+    <AddUser v-model:open="addUserDialog" :on-close="handleGetUserList" />
 
     <el-table v-loading="loading" :data="list" border stripe width="100%" row-key="uuid">
       <el-table-column type="selection" width="55" align="center" />
@@ -54,7 +63,12 @@ onMounted(() => {
       <el-table-column label="创建时间" prop="createTime" width="180" align="center"
         :formatter="(row: any) => dayjs(row.createTime).format('YYYY-MM-DD HH:mm:ss')" />
       <el-table-column label="操作" width="200" align="center">
-        <template #default="">
+        <template #default="{ row }">
+          <el-popconfirm title="确定删除吗" @confirm="handleDeleteUser(row.id)">
+            <template #reference>
+              <el-button type="danger" text link>删除</el-button>
+            </template>
+          </el-popconfirm>
           <el-button type="info" text link>详情</el-button>
         </template>
       </el-table-column>

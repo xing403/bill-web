@@ -9,6 +9,8 @@ const total = ref(0)
 const list = ref([])
 
 const addUserDialog = ref(false);
+const updateUserDialog = ref(false);
+const currentUserId = ref(0);
 const handleGetUserList = () => {
   if (loading.value) return
   loading.value = true
@@ -28,6 +30,10 @@ const handleDeleteUser = (userId: number) => {
     ElMessage.success('删除成功')
     handleGetUserList()
   })
+}
+const handleUpdateUser = (userId: number) => {
+  currentUserId.value = userId
+  updateUserDialog.value = true
 }
 onMounted(() => {
   handleGetUserList()
@@ -64,6 +70,7 @@ onMounted(() => {
         :formatter="(row: any) => dayjs(row.createTime).format('YYYY-MM-DD HH:mm:ss')" />
       <el-table-column label="操作" width="200" align="center">
         <template #default="{ row }">
+          <el-button type="warning" text link @click="handleUpdateUser(row.id)">编辑</el-button>
           <el-popconfirm title="确定删除吗" @confirm="handleDeleteUser(row.id)">
             <template #reference>
               <el-button type="danger" text link>删除</el-button>
@@ -80,5 +87,6 @@ onMounted(() => {
       <el-pagination background layout="prev, pager, next" v-model:current-page="pageNum"
         @current-change="handleGetUserList" :total="total" :page-size="pageSize" />
     </div>
+    <UpdateUser v-model="currentUserId" v-model:open="updateUserDialog" :on-close="handleGetUserList" />
   </div>
 </template>

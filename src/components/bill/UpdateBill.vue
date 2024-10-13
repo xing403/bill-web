@@ -26,7 +26,7 @@ const rules = {
   billTime: [{ required: true, message: '请选择账单日期', trigger: 'blur' }]
 }
 const handleUpdateBill = () => {
-  formRef.value.validate(valid => {
+  formRef.value.validate((valid: boolean) => {
     if (valid) {
       billApi.editBill(form.value).then(() => {
         ElMessage.success('添加成功')

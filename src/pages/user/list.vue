@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ElMessage, dayjs } from 'element-plus'
+import { ElMessage, ElMessageBox, dayjs } from 'element-plus'
 import userApi from '~/api/modules/user'
 
 const loading = ref(false)
@@ -35,6 +35,29 @@ const handleUpdateUser = (userId: number) => {
   currentUserId.value = userId
   updateUserDialog.value = true
 }
+
+const confirmEnableOrDisable = () => {
+  return ElMessageBox.confirm(
+    '确定改变该用户状态吗?',
+    '警告',
+    {
+      distinguishCancelAndClose: true,
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+    }
+  )
+}
+const handleEnableOrDisableUser = async (userId: number, state: string) => {
+  const handle = state === '1' ? userApi.disableUserByUserId : userApi.enableUserByUserId;
+  handle(userId).then(() => {
+    ElMessage.success('操作成功')
+  }).catch((error: string) => {
+    ElMessage.error(error)
+  }).finally(() => {
+    handleGetUserList()
+  })
+}
+
 onMounted(() => {
   handleGetUserList()
 })
@@ -64,6 +87,13 @@ onMounted(() => {
         <template #default="{ row }">
           <el-tag v-if="row.isAdmin == '1'" type="warning">管理员</el-tag>
           <el-tag v-else type="info">用户</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" prop="locked" width="120" align="center">
+        <template #default="{ row }">
+          <el-switch v-model="row.locked" style=" --el-switch-off-color: #ff4949" inline-prompt active-text="启用"
+            inactive-text="停用" active-value="0" inactive-value="1" :before-change="confirmEnableOrDisable"
+            @change="(val: string) => handleEnableOrDisableUser(row.id, val)" />
         </template>
       </el-table-column>
       <el-table-column label="创建时间" prop="createTime" width="180" align="center"

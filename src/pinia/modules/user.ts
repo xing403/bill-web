@@ -9,7 +9,10 @@ export default defineStore('user', () => {
 
   const userIsLogin = computed(() => !!token.value)
   const handleUserLogin = ({ username, password }: { username: string, password: string }) => {
-    return userApi.login({ username, password }).then(({ data }) => {
+    const form = new FormData()
+    form.append('username', username)
+    form.append('password', password)
+    return userApi.login(form).then(({ data }) => {
       token.value = data
     })
   }

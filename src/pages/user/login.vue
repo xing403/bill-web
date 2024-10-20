@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { dayjs } from 'element-plus'
 import userApi from '~/api/modules/user'
+import { sendPrivateMessage } from '~/api/modules/message'
 
 const loading = ref(false)
 const pageNum = ref(1);
@@ -16,6 +17,14 @@ const handleGetAllLoginUser = () => {
     total.value = data.total
   }).finally(() => {
     loading.value = false
+  })
+}
+
+const handleUserOffline = (row: any) => {
+  sendPrivateMessage({
+    to: row.username,
+    message: '强制下线',
+    topic: '/topic/private'
   })
 }
 
@@ -44,7 +53,8 @@ onMounted(() => {
       <el-table-column label="创建时间" prop="createTime" width="180" align="center"
         :formatter="(row: any) => dayjs(row.createTime).format('YYYY-MM-DD HH:mm:ss')" />
       <el-table-column label="操作" width="200" align="center">
-        <template #default="">
+        <template #default="{ row }">
+          <el-button type="warning" text link @click="handleUserOffline(row)">强制下线</el-button>
           <el-button type="info" text link>详情</el-button>
         </template>
       </el-table-column>

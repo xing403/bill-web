@@ -6,7 +6,6 @@ import useVitePlugins from './vite/plugins'
 
 export default ({ mode, command }: any) => {
   const env = loadEnv(mode, process.cwd())
-  console.log(env.VITE_APP_PROXY_URL)
   return defineConfig({
     resolve: {
       alias: {

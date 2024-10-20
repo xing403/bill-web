@@ -1,13 +1,17 @@
+import { RemovableRef } from '@vueuse/core'
 import { defineStore } from 'pinia'
 import userApi from '~/api/modules/user'
+import useSocketStore from './socket'
 
 export default defineStore('user', () => {
   const router = useRouter()
 
-  const token = ref(useLocalStorage('token', null, { deep: true }))
+  const token = ref<RemovableRef<string>>(useLocalStorage('token', '', { deep: true }))
   const information = ref<any>(null)
 
   const userIsLogin = computed(() => !!token.value)
+  const socketStore = useSocketStore()
+
   const handleUserLogin = ({ username, password }: { username: string, password: string }) => {
     const form = new FormData()
     form.append('username', username)
@@ -20,6 +24,13 @@ export default defineStore('user', () => {
   const getUserInformation = () => {
     return userApi.getUserInfo().then(({ data }) => {
       information.value = data
+      if (import.meta.env.VITE_APP_WS_PATH) {
+        socketStore.connect(import.meta.env.VITE_APP_WS_PATH, token.value, (frames) => {
+          socketStore.subscribe('/topic', (message) => console.log(message))
+          socketStore.subscribe('/topic/message', (message) => console.log(message))
+          socketStore.subscribe('/user/topic/private', (message) => console.log(message))
+        });
+      }
     })
   }
 
@@ -37,11 +48,7 @@ export default defineStore('user', () => {
   const handleUserLogout = () => {
     return userApi.logout().then(() => {
       reLogin()
-    }).catch((err) => {
-      if (err.code === 400) {
-
-      }
-    })
+    }).catch((err) => { })
   }
 
   return {

@@ -54,7 +54,7 @@ const handleRegisterUser = () => {
         formType.value = 'login'
       }).catch((error) => {
         ElMessage.error(error)
-        userStore.token = null
+        userStore.token = ''
       })
     }
   })

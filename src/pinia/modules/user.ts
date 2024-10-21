@@ -3,6 +3,9 @@ import { defineStore } from 'pinia'
 import userApi from '~/api/modules/user'
 import useSocketStore from './socket'
 
+import bus from '~/utils/event-bus'
+import useSocketEvent from '~/utils/socket-event'
+
 export default defineStore('user', () => {
   const router = useRouter()
 
@@ -11,6 +14,7 @@ export default defineStore('user', () => {
 
   const userIsLogin = computed(() => !!token.value)
   const socketStore = useSocketStore()
+  const socketEvent = useSocketEvent()
 
   const handleUserLogin = ({ username, password }: { username: string, password: string }) => {
     const form = new FormData()
@@ -22,13 +26,14 @@ export default defineStore('user', () => {
   }
 
   const getUserInformation = () => {
+    bus.on('user.event.offline', socketEvent.useUserOffline)
     return userApi.getUserInfo().then(({ data }) => {
       information.value = data
       if (import.meta.env.VITE_APP_WS_PATH) {
         socketStore.connect(import.meta.env.VITE_APP_WS_PATH, token.value, (frames) => {
-          socketStore.subscribe('/topic', (message) => console.log(message))
-          socketStore.subscribe('/topic/message', (message) => console.log(message))
-          socketStore.subscribe('/user/topic/private', (message) => console.log(message))
+          socketStore.subscribe('/topic')
+          socketStore.subscribe('/topic/message')
+          socketStore.subscribe('/user/topic/private')
         });
       }
     })
@@ -47,6 +52,7 @@ export default defineStore('user', () => {
 
   const handleUserLogout = () => {
     return userApi.logout().then(() => {
+      bus.off('user.event.offline')
       reLogin()
     }).catch((err) => { })
   }

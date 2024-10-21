@@ -23,8 +23,13 @@ const handleGetAllLoginUser = () => {
 const handleUserOffline = (row: any) => {
   sendPrivateMessage({
     to: row.username,
-    message: '强制下线',
+    message: JSON.stringify({
+      eventName: "user.event.offline",
+      message: ''
+    }),
     topic: '/topic/private'
+  }).then(() => {
+    handleGetAllLoginUser()
   })
 }
 

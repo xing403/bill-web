@@ -1,5 +1,6 @@
 import { Client, IFrame } from '@stomp/stompjs';
 import { defineStore } from 'pinia'
+import bus from '~/utils/event-bus'
 
 export default defineStore('socket', () => {
   const client = ref<Client | null>(null)
@@ -23,13 +24,11 @@ export default defineStore('socket', () => {
    * @param topic
    * @param callback
    */
-  const subscribe = (topic: string, callback: (message: string) => void) => {
-    client.value?.subscribe(topic, (message) => {
-      try {
-        callback(JSON.parse(message.body));
-      } catch (e) {
-        callback(message.body);
-      }
+  const subscribe = (topic: string, callback?: (params?: any) => {}) => {
+    client.value?.subscribe(topic, (socketMessage) => {
+      const { eventName, message } = JSON.parse(socketMessage.body)
+      const event = eventName.split("/").filter((item: string) => item !== '').join(".")
+      callback ? callback(message) : bus.emit(event, message)
     });
   }
   /**

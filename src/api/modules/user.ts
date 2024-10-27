@@ -13,6 +13,10 @@ export const deleteUser = (userId: number) => api.delete(`/user/${userId}`)
 export const enableUserByUserId = (id: number) => api.get(`/user/enable/${id}`)
 export const disableUserByUserId = (id: number) => api.get(`/user/disable/${id}`)
 
+export const getLoginQRCode = () => api.get('/qrcode')
+export const getQRCodInformation = (qrcode: string) => api.get(`/qrcode/${qrcode}/information`)
+export const checkQRCodeStatus = (qrcode: string) => api.get(`/qrcode/${qrcode}/status`)
+
 export default {
   login,
   register,
@@ -25,5 +29,8 @@ export default {
   updateUser,
   deleteUser,
   enableUserByUserId,
-  disableUserByUserId
+  disableUserByUserId,
+  getLoginQRCode,
+  checkQRCodeStatus,
+  getQRCodInformation
 }

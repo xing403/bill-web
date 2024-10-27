@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import { ElMessage } from 'element-plus';
+import { Loading } from '@element-plus/icons-vue'
+
 import userApi from '~/api/modules/user';
 import useUserStore from '~/pinia/modules/user'
+import { useQRCode } from '@vueuse/integrations/useQRCode'
+import { clear } from 'node:console';
 
 const route = useRoute()
 const router = useRouter()
@@ -28,7 +32,7 @@ const handleLoginUser = () => {
         router.replace({ path: redirect.value })
       }).catch((error) => {
         ElMessage.error(error)
-        userStore.token = null
+        userStore.token = ''
       })
     }
   })
@@ -60,6 +64,45 @@ const handleRegisterUser = () => {
   })
 }
 
+const qrcode = ref({
+  dialog: false,
+  str: '',
+  status: "WAITING",
+  img: ref(),
+})
+let qrcodeTimer: any = null
+const handleCloseQRCode = (done: () => void) => {
+  qrcode.value.str = ''
+  qrcode.value.img = null
+  done()
+}
+const handleGetLoginQRCode = () => {
+  qrcode.value.dialog = true
+  userApi.getLoginQRCode().then((res) => {
+    qrcode.value.str = res.data
+  }).catch((error) => {
+    ElMessage.error(error)
+  }).finally(() => {
+    qrcode.value.img = useQRCode(qrcode.value.str)
+    qrcodeTimer = setInterval(() => {
+      userApi.checkQRCodeStatus(qrcode.value.str).then((res) => {
+        qrcode.value.status = res.data
+      }).catch(() => {
+        qrcode.value.status = "FAILED"
+        clearInterval(qrcodeTimer)
+      })
+    }, 3000)
+  })
+}
+watchEffect(() => {
+  if (qrcode.value.status === "SUCCESS") {
+    clearInterval(qrcodeTimer)
+    userApi.getQRCodInformation(qrcode.value.str).then(({ data }: any) => {
+      userStore.token = JSON.parse(data.token).token
+      router.replace({ path: redirect.value })
+    })
+  }
+})
 </script>
 
 <template>
@@ -79,6 +122,7 @@ const handleRegisterUser = () => {
         <el-form-item>
           <span>还未有账号? </span>
           <el-button type="primary" link @click="formType = 'register'">注册账号</el-button>
+          <el-button type="primary" link @click="handleGetLoginQRCode">扫码登录</el-button>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" size="default" @click="handleLoginUser" w-full>登录</el-button>
@@ -106,5 +150,18 @@ const handleRegisterUser = () => {
         </el-form-item>
       </el-form>
     </div>
+
+    <el-dialog title="扫码登录" v-model="qrcode.dialog" :width="300" :before-close="handleCloseQRCode">
+      <div flex="~ row" justify-center>
+        <el-image v-model:src="qrcode.img" fit="fill" w-300px h-300px m-auto>
+          <template #placeholder>
+            <el-icon size="300px">
+              <Loading w-300px h-300px />
+            </el-icon>
+          </template>
+        </el-image>
+      </div>
+    </el-dialog>
+
   </div>
 </template>

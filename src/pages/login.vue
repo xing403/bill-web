@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { ElMessage } from 'element-plus';
-import { Loading } from '@element-plus/icons-vue'
 
 import userApi from '~/api/modules/user';
 import useUserStore from '~/pinia/modules/user'
-import { useQRCode } from '@vueuse/integrations/useQRCode'
-import { clear } from 'node:console';
+import QRCode from '~/components/QRCode/index.vue'
+
 
 const route = useRoute()
 const router = useRouter()
@@ -68,32 +67,36 @@ const qrcode = ref({
   dialog: false,
   str: '',
   status: "WAITING",
-  img: ref(),
 })
 let qrcodeTimer: any = null
 const handleCloseQRCode = (done: () => void) => {
   qrcode.value.str = ''
-  qrcode.value.img = null
+  clearInterval(qrcodeTimer)
   done()
 }
 const handleGetLoginQRCode = () => {
-  qrcode.value.dialog = true
   userApi.getLoginQRCode().then((res) => {
+    qrcode.value.dialog = true
     qrcode.value.str = res.data
+    qrcode.value.status = "WAITING"
   }).catch((error) => {
     ElMessage.error(error)
   }).finally(() => {
-    qrcode.value.img = useQRCode(qrcode.value.str)
     qrcodeTimer = setInterval(() => {
-      userApi.checkQRCodeStatus(qrcode.value.str).then((res) => {
-        qrcode.value.status = res.data
-      }).catch(() => {
-        qrcode.value.status = "FAILED"
-        clearInterval(qrcodeTimer)
-      })
+      handleGetQRCodeStatus()
     }, 3000)
   })
 }
+
+const handleGetQRCodeStatus = () => {
+  userApi.checkQRCodeStatus(qrcode.value.str).then((res) => {
+    qrcode.value.status = res.data
+  }).catch(() => {
+    qrcode.value.status = "FAILED"
+    clearInterval(qrcodeTimer)
+  })
+}
+
 watchEffect(() => {
   if (qrcode.value.status === "SUCCESS") {
     clearInterval(qrcodeTimer)
@@ -152,15 +155,7 @@ watchEffect(() => {
     </div>
 
     <el-dialog title="扫码登录" v-model="qrcode.dialog" :width="300" :before-close="handleCloseQRCode">
-      <div flex="~ row" justify-center>
-        <el-image v-model:src="qrcode.img" fit="fill" w-300px h-300px m-auto>
-          <template #placeholder>
-            <el-icon size="300px">
-              <Loading w-300px h-300px />
-            </el-icon>
-          </template>
-        </el-image>
-      </div>
+      <QRCode v-model:qrcode="qrcode.str" v-model:status="qrcode.status" @reload="handleGetLoginQRCode" />
     </el-dialog>
 
   </div>

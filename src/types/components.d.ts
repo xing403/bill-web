@@ -13,6 +13,7 @@ declare module 'vue' {
     HelloWorld: typeof import('./../components/HelloWorld.vue')['default']
     LineYear: typeof import('./../components/bill/statistic/LineYear.vue')['default']
     PageMain: typeof import('./../components/PageMain.vue')['default']
+    QRCode: typeof import('./../components/QRCode/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SwitchTheme: typeof import('./../components/SwitchTheme.vue')['default']

@@ -101,7 +101,7 @@ watchEffect(() => {
   if (qrcode.value.status === "SUCCESS") {
     clearInterval(qrcodeTimer)
     userApi.getQRCodInformation(qrcode.value.str).then(({ data }: any) => {
-      userStore.token = JSON.parse(data.token).token
+      userStore.token = data
       router.replace({ path: redirect.value })
     })
   }

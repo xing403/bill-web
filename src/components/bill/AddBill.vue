@@ -1,40 +1,41 @@
 <script setup lang="ts">
 import { ElMessage } from 'element-plus'
-import billApi from '~/api/modules/bill'
+import { insertBill } from '~/api/modules/bill'
+import type { BillEntity } from '~/types/entity'
+
 const props = defineProps<{
-  open: boolean,
+  open: boolean
   onClose: () => void
 }>()
 const emit = defineEmits(['update:open'])
 const model = toRef(props, 'open')
 const formRef = ref()
-const form = ref({
+const form = ref<BillEntity>({
   billTitle: '',
-  billAmount: null,
+  billAmount: undefined,
   billType: '',
-  billTime: ''
+  billTime: '',
 })
 const rules = {
   billTitle: [{ required: true, message: '请输入账单标题', trigger: 'blur' }],
   billAmount: [
     { required: true, message: '请输入账单金额', trigger: 'blur' },
-    { type: 'number', message: '请输入数字' },
-    { type: 'number', min: 0, message: '请输入大于0的数字' }
+    { min: 0, message: '请输入大于0的数字' },
   ],
   billType: [{ required: true, message: '请选择账单类型', trigger: 'blur' }],
-  billTime: [{ required: true, message: '请选择账单日期', trigger: 'blur' }]
+  billTime: [{ required: true, message: '请选择账单日期', trigger: 'blur' }],
 }
-const handleAddBill = () => {
+function handleAddBill() {
   formRef.value.validate((valid: boolean) => {
     if (valid) {
-      billApi.addBill(form.value).then(() => {
+      insertBill(form.value).then(() => {
         ElMessage.success('添加成功')
         handleClose()
       })
     }
   })
 }
-const handleClose = () => {
+function handleClose() {
   formRef.value?.resetFields()
   props?.onClose()
   emit('update:open', false)
@@ -42,9 +43,11 @@ const handleClose = () => {
 </script>
 
 <template>
-  <el-dialog title="新增账单" v-model="model" :before-close="handleClose" :close-on-press-escape="false"
-    :close-on-click-modal="false">
-    <el-form :model="form" ref="formRef" :rules="rules" label-position="top">
+  <el-dialog
+    v-model="model" title="新增账单" :before-close="handleClose" :close-on-press-escape="false"
+    :close-on-click-modal="false"
+  >
+    <el-form ref="formRef" :model="form" :rules="rules" label-position="top">
       <el-form-item label="账单标题" prop="billTitle">
         <el-input v-model="form.billTitle" />
       </el-form-item>
@@ -56,8 +59,12 @@ const handleClose = () => {
       </el-form-item>
       <el-form-item label="账单类型" prop="billType">
         <el-radio-group v-model="form.billType">
-          <el-radio value="income">收入</el-radio>
-          <el-radio value="spend">支出</el-radio>
+          <el-radio value="income">
+            收入
+          </el-radio>
+          <el-radio value="spend">
+            支出
+          </el-radio>
         </el-radio-group>
       </el-form-item>
     </el-form>

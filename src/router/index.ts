@@ -1,8 +1,7 @@
-import routes from './routes'
 import { createRouter, createWebHistory } from 'vue-router'
 import pkj from '../../package.json'
+import routes from './routes'
 import useUserStore from '~/pinia/modules/user'
-
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,15 +12,15 @@ router.beforeEach(async (to, from, next) => {
   const userStore = useUserStore()
   useTitle(pkj.name ?? '未命名')
   if (userStore.userIsLogin) {
-    if (!userStore.information) {
+    if (!userStore.information)
       await userStore.getUserInformation()
-    }
-    if (to.name !== 'login') {
+
+    if (to.name !== 'login')
       next()
-    } else {
+    else
       next({ path: '/' })
-    }
-  } else {
+  }
+  else {
     to.path === '/login' ? next() : next({ name: 'login' })
   }
 })

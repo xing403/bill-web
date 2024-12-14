@@ -1,7 +1,7 @@
-import { RemovableRef } from '@vueuse/core'
+import type { RemovableRef } from '@vueuse/core'
 import { defineStore } from 'pinia'
-import userApi from '~/api/modules/user'
 import useSocketStore from './socket'
+import userApi from '~/api/modules/user'
 
 import bus from '~/utils/event-bus'
 import useSocketEvent from '~/utils/socket-event'
@@ -16,7 +16,7 @@ export default defineStore('user', () => {
   const socketStore = useSocketStore()
   const socketEvent = useSocketEvent()
 
-  const handleUserLogin = ({ username, password }: { username: string, password: string }) => {
+  const handleUserLogin = ({ username, password }: { username: string; password: string }) => {
     const form = new FormData()
     form.append('username', username)
     form.append('password', password)
@@ -34,7 +34,7 @@ export default defineStore('user', () => {
           socketStore.subscribe('/topic')
           socketStore.subscribe('/topic/message')
           socketStore.subscribe('/user/topic/private')
-        });
+        })
       }
     })
   }
@@ -45,8 +45,8 @@ export default defineStore('user', () => {
     router.replace({
       name: 'login',
       query: {
-        redirect: router.currentRoute.value.fullPath
-      }
+        redirect: router.currentRoute.value.fullPath,
+      },
     })
   }
 
@@ -64,6 +64,6 @@ export default defineStore('user', () => {
     reLogin,
     handleUserLogin,
     handleUserLogout,
-    getUserInformation
+    getUserInformation,
   }
 })

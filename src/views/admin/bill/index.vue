@@ -1,0 +1,111 @@
+<script setup lang="ts" generic="T extends any, O extends any">
+import { ElMessage, dayjs } from 'element-plus'
+import billApi, { getBillList } from '~/api/modules/bill'
+import type { BillVOEntity } from '~/types/entity'
+
+const pageNum = ref(1)
+const pageSize = ref(10)
+const total = ref(0)
+const list = ref<BillVOEntity[]>([])
+const showAddBill = ref(false)
+const showUpdateBill = ref(false)
+const updateBillId = ref(0)
+const loading = ref(false)
+function handleGetBillList() {
+  if (loading.value)
+    return
+  loading.value = true
+  getBillList({
+    pageNum: pageNum.value,
+    pageSize: pageSize.value,
+  }).then(({ data }) => {
+    list.value = data.data
+    total.value = data.total
+  }).finally(() => loading.value = false)
+}
+
+function handleUpdateBill(billId: number) {
+  updateBillId.value = billId
+  showUpdateBill.value = !showUpdateBill.value
+}
+function handleDeleteBill(billId: number) {
+  billApi.deleteBill(billId).then(() => {
+    ElMessage.success('删除成功')
+    handleGetBillList()
+  })
+}
+
+onMounted(() => {
+  handleGetBillList()
+})
+</script>
+
+<template>
+  <div>
+    <div mb-4 flex justify-between>
+      <div>
+        <el-button type="primary" round @click="showAddBill = !showAddBill">
+          新增账单
+        </el-button>
+      </div>
+      <div>
+        <el-button round @click="handleGetBillList">
+          刷新列表
+        </el-button>
+      </div>
+    </div>
+    <el-table v-loading="loading" :data="list" stripe border width="100%" row-key="billId">
+      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column type="index" width="80" label="编号" align="center" />
+      <el-table-column label="标题" prop="billTitle" />
+      <el-table-column label="金额" prop="billAmount" width="120" align="center" />
+      <el-table-column label="类型" prop="billType" width="120" align="center">
+        <template #default="{ row }">
+          <el-tag v-if="row.billType === 'spend'" type="warning">
+            支出
+          </el-tag>
+          <el-tag v-else-if="row.billType === 'income'" type="warning">
+            收入
+          </el-tag>
+          <el-tag v-else type="info">
+            其他
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="创建时间" prop="createTime" width="180" align="center"
+        :formatter="(row: any) => dayjs(row.createTime).format('YYYY-MM-DD HH:mm:ss')"
+      />
+      <el-table-column label="操作" width="200" align="center">
+        <template #default="{ row }">
+          <el-button type="warning" text link @click="handleUpdateBill(row.billId)">
+            编辑
+          </el-button>
+          <el-popconfirm title="确定删除吗" @confirm="handleDeleteBill(row.billId)">
+            <template #reference>
+              <el-button type="danger" text link>
+                删除
+              </el-button>
+            </template>
+          </el-popconfirm>
+
+          <el-button type="info" text link>
+            详情
+          </el-button>
+        </template>
+      </el-table-column>
+      <template #empty>
+        <el-empty />
+      </template>
+    </el-table>
+    <div mt-4 flex justify-end>
+      <el-pagination
+        v-model:current-page="pageNum" background layout="prev, pager, next" :total="total"
+        :page-size="pageSize" @current-change="handleGetBillList"
+      />
+    </div>
+
+    <AddBill v-model:open="showAddBill" :on-close="handleGetBillList" />
+    <UpdateBill v-model="updateBillId" v-model:open="showUpdateBill" :on-close="handleGetBillList" />
+  </div>
+</template>

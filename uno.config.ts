@@ -31,7 +31,9 @@ export default defineConfig({
     }),
   ],
   transformers: [
-    transformerDirectives(),
+    transformerDirectives({
+      applyVariable: ['--at-apply', '--uno-apply', '--uno'],
+    }),
     transformerVariantGroup(),
     transformerCompileClass(),
   ],

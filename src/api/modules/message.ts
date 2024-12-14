@@ -5,5 +5,5 @@ export const sendPrivateMessage = (params: any) => api.post('/message/private', 
 
 export default {
   sendPublicMessage,
-  sendPrivateMessage
+  sendPrivateMessage,
 }

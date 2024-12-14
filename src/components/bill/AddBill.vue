@@ -3,12 +3,10 @@ import { ElMessage } from 'element-plus'
 import { insertBill } from '~/api/modules/bill'
 import type { BillEntity } from '~/types/entity'
 
-const props = defineProps<{
-  open: boolean
-  onClose: () => void
-}>()
-const emit = defineEmits(['update:open'])
-const model = toRef(props, 'open')
+const emit = defineEmits(['update:modelValue', 'close'])
+
+const open = defineModel<boolean>()
+
 const formRef = ref()
 const form = ref<BillEntity>({
   billTitle: '',
@@ -16,11 +14,11 @@ const form = ref<BillEntity>({
   billType: '',
   billTime: '',
 })
+const { width } = useWindowSize()
 const rules = {
   billTitle: [{ required: true, message: '请输入账单标题', trigger: 'blur' }],
   billAmount: [
     { required: true, message: '请输入账单金额', trigger: 'blur' },
-    { min: 0, message: '请输入大于0的数字' },
   ],
   billType: [{ required: true, message: '请选择账单类型', trigger: 'blur' }],
   billTime: [{ required: true, message: '请选择账单日期', trigger: 'blur' }],
@@ -30,22 +28,22 @@ function handleAddBill() {
     if (valid) {
       insertBill(form.value).then(() => {
         ElMessage.success('添加成功')
-        handleClose()
+        handleClose(true)
       })
     }
   })
 }
-function handleClose() {
+function handleClose(init = false) {
   formRef.value?.resetFields()
-  props?.onClose()
-  emit('update:open', false)
+  emit('close', init)
+  emit('update:modelValue', false)
 }
 </script>
 
 <template>
   <el-dialog
-    v-model="model" title="新增账单" :before-close="handleClose" :close-on-press-escape="false"
-    :close-on-click-modal="false"
+    v-model="open" title="新增账单" :before-close="() => handleClose(false)" :close-on-press-escape="false"
+    :close-on-click-modal="false" :width="width < 756 ? '95%' : ''"
   >
     <el-form ref="formRef" :model="form" :rules="rules" label-position="top">
       <el-form-item label="账单标题" prop="billTitle">
@@ -55,7 +53,10 @@ function handleClose() {
         <el-input-number v-model="form.billAmount" :min="0" :controls="true" />
       </el-form-item>
       <el-form-item label="账单日期" prop="billTime">
-        <el-date-picker v-model="form.billTime" placeholder="选择日期时间" type="date" value-format="YYYY-MM-DD HH:mm:ss" />
+        <el-date-picker
+          v-model="form.billTime" placeholder="选择日期时间" :editable="false" type="date"
+          value-format="YYYY-MM-DD HH:mm:ss"
+        />
       </el-form-item>
       <el-form-item label="账单类型" prop="billType">
         <el-radio-group v-model="form.billType">
@@ -71,7 +72,7 @@ function handleClose() {
 
     <template #footer>
       <span>
-        <el-button @click="handleClose">取消</el-button>
+        <el-button @click="() => handleClose(false)">取消</el-button>
         <el-button type="primary" @click="handleAddBill">确认</el-button>
       </span>
     </template>

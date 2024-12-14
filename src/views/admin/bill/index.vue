@@ -105,7 +105,7 @@ onMounted(() => {
       />
     </div>
 
-    <AddBill v-model:open="showAddBill" :on-close="handleGetBillList" />
+    <AddBill v-model="showAddBill" :on-close="handleGetBillList" />
     <UpdateBill v-model="updateBillId" v-model:open="showUpdateBill" :on-close="handleGetBillList" />
   </div>
 </template>

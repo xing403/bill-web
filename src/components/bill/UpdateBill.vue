@@ -7,7 +7,6 @@ import bus from '~/utils/event-bus'
 const props = defineProps<{
   modelValue: number
   open: boolean
-  onClose: () => void
 }>()
 const emit = defineEmits(['update:open'])
 const model = toRef(props, 'open')
@@ -22,7 +21,6 @@ const rules = {
   billTitle: [{ required: true, message: '请输入账单标题', trigger: 'blur' }],
   billAmount: [
     { required: true, message: '请输入账单金额', trigger: 'blur' },
-    { min: 0, message: '请输入大于0的数字' },
   ],
   billType: [{ required: true, message: '请选择账单类型', trigger: 'blur' }],
   billTime: [{ required: true, message: '请选择账单日期', trigger: 'blur' }],
@@ -33,6 +31,7 @@ function handleUpdateBill() {
       updateBill(form.value).then(() => {
         ElMessage.success('更新成功')
         bus.emit('reflash-bill-list')
+        bus.emit('reflash-bill-list-admin')
         handleClose()
       })
     }

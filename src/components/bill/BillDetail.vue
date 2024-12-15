@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Delete } from '@element-plus/icons-vue'
+import { Delete, Edit } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { deleteBill, getBill } from '~/api/modules/bill'
 import type { BillVOEntity } from '~/types/entity'
@@ -19,6 +19,7 @@ const form = ref<BillVOEntity | null>()
 
 const router = useRouter()
 const loading = ref(false)
+const openEdit = ref(false)
 
 function handleGetBillDetail() {
   if (loading.value)
@@ -36,7 +37,9 @@ function handleGetBillDetail() {
 function handleHeaderBack() {
   router.back()
 }
-
+function handleEditBill() {
+  openEdit.value = true
+}
 function handleDeleteBill() {
   ElMessageBox.confirm('是否继续删除这个账单?', '警告', {
     type: 'warning',
@@ -65,6 +68,8 @@ watch(() => route.query.billId, () => {
       <el-page-header content="账单详情" title="首页" flex-1 @back="handleHeaderBack">
         <template #extra>
           <div class="flex items-center">
+            <el-button type="warning" link :icon="Edit" @click="handleEditBill" />
+
             <el-button type="danger" link :icon="Delete" @click="handleDeleteBill" />
           </div>
         </template>
@@ -73,30 +78,33 @@ watch(() => route.query.billId, () => {
     <el-main>
       <el-skeleton :rows="5" :loading="loading" animated>
         <template #template />
-        <el-form v-if="form" ref="formRef" :model="form" label-position="top">
-          <el-form-item label="账单标题" prop="billTitle">
-            <el-input v-model="form.billTitle" disabled />
-          </el-form-item>
-          <el-form-item label="账单金额" prop="billAmount">
-            <el-input-number v-model="form.billAmount" disabled :min="0" :controls="true" />
-          </el-form-item>
-          <el-form-item label="账单日期" prop="billTime">
-            <el-date-picker
-              v-model="form.billTime" placeholder="选择日期时间" type="date" value-format="YYYY-MM-DD HH:mm:ss"
-              disabled
-            />
-          </el-form-item>
-          <el-form-item label="账单类型" prop="billType">
-            <el-radio-group v-model="form.billType" disabled>
-              <el-radio value="income">
-                收入
-              </el-radio>
-              <el-radio value="spend">
-                支出
-              </el-radio>
-            </el-radio-group>
-          </el-form-item>
-        </el-form>
+        <template v-if="form">
+          <el-form ref="formRef" :model="form" label-position="top">
+            <el-form-item label="账单标题" prop="billTitle">
+              <el-input v-model="form.billTitle" disabled />
+            </el-form-item>
+            <el-form-item label="账单金额" prop="billAmount">
+              <el-input-number v-model="form.billAmount" disabled :min="0" :controls="true" />
+            </el-form-item>
+            <el-form-item label="账单日期" prop="billTime">
+              <el-date-picker
+                v-model="form.billTime" placeholder="选择日期时间" type="date"
+                value-format="YYYY-MM-DD HH:mm:ss" disabled
+              />
+            </el-form-item>
+            <el-form-item label="账单类型" prop="billType">
+              <el-radio-group v-model="form.billType" disabled>
+                <el-radio value="income">
+                  收入
+                </el-radio>
+                <el-radio value="spend">
+                  支出
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-form>
+          <update-bill v-model:open="openEdit" v-model="billId" />
+        </template>
         <el-empty v-else />
       </el-skeleton>
     </el-main>

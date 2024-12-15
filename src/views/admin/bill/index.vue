@@ -110,7 +110,7 @@ onUnmounted(() => {
       />
     </div>
 
-    <AddBill v-model="showAddBill" :on-close="handleGetBillList" />
-    <UpdateBill v-model="updateBillId" v-model:open="showUpdateBill" :on-close="handleGetBillList" />
+    <AddBill v-model="showAddBill" />
+    <UpdateBill v-model="updateBillId" v-model:open="showUpdateBill" />
   </div>
 </template>

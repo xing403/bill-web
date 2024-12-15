@@ -2,8 +2,9 @@
 import { ElMessage } from 'element-plus'
 import { insertBill } from '~/api/modules/bill'
 import type { BillEntity } from '~/types/entity'
+import bus from '~/utils/event-bus'
 
-const emit = defineEmits(['update:modelValue', 'close'])
+const emit = defineEmits(['update:modelValue'])
 
 const open = defineModel<boolean>()
 
@@ -28,6 +29,8 @@ function handleAddBill() {
     if (valid) {
       insertBill(form.value).then(() => {
         ElMessage.success('添加成功')
+        bus.emit('reflash-bill-list')
+        bus.emit('reflash-bill-list-admin')
         handleClose(true)
       })
     }
@@ -35,7 +38,6 @@ function handleAddBill() {
 }
 function handleClose(init = false) {
   formRef.value?.resetFields()
-  emit('close', init)
   emit('update:modelValue', false)
 }
 </script>

@@ -2,6 +2,7 @@
 import { ElMessage, dayjs } from 'element-plus'
 import billApi, { getBillList } from '~/api/modules/bill'
 import type { BillVOEntity } from '~/types/entity'
+import bus from '~/utils/event-bus'
 
 const pageNum = ref(1)
 const pageSize = ref(10)
@@ -37,6 +38,10 @@ function handleDeleteBill(billId: number) {
 
 onMounted(() => {
   handleGetBillList()
+  bus.on('reflash-bill-list-admin', handleGetBillList)
+})
+onUnmounted(() => {
+  bus.off('reflash-bill-list-admin', handleGetBillList)
 })
 </script>
 

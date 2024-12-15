@@ -1,6 +1,15 @@
 <script setup lang="ts">
-import { getBill } from '~/api/modules/bill'
+import { Delete } from '@element-plus/icons-vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { deleteBill, getBill } from '~/api/modules/bill'
 import type { BillVOEntity } from '~/types/entity'
+import bus from '~/utils/event-bus'
+
+const props = withDefaults(defineProps<{
+  back?: boolean
+}>(), {
+  back: true,
+})
 
 const route = useRoute()
 
@@ -10,6 +19,7 @@ const form = ref<BillVOEntity | null>()
 
 const router = useRouter()
 const loading = ref(false)
+
 function handleGetBillDetail() {
   if (loading.value)
     return
@@ -17,6 +27,8 @@ function handleGetBillDetail() {
   loading.value = true
   getBill(billId.value).then(({ data }) => {
     form.value = data
+  }).catch(() => {
+    form.value = null
   }).finally(() => {
     loading.value = false
   })
@@ -25,7 +37,22 @@ function handleHeaderBack() {
   router.back()
 }
 
+function handleDeleteBill() {
+  ElMessageBox.confirm('是否继续删除这个账单?', '警告', {
+    type: 'warning',
+  }).then(() => {
+    deleteBill(billId.value).then(() => {
+      ElMessage({ message: '删除成功', type: 'success', plain: true })
+      bus.emit('reflash-bill-list')
+      if (props.back)
+        handleHeaderBack()
+      else
+        router.replace({ query: {} })
+    })
+  }).catch(() => { })
+}
 watch(() => route.query.billId, () => {
+  billId.value = Number(route.query.billId)
   handleGetBillDetail()
 }, {
   immediate: true,
@@ -34,10 +61,14 @@ watch(() => route.query.billId, () => {
 
 <template>
   <el-container>
-    <el-header style="--el-header-height: 40px">
-      <div h-full flex="~ row" items-center>
-        <el-page-header content="账单详情" title="首页" w-full @back="handleHeaderBack" />
-      </div>
+    <el-header style="--el-header-height: 40px" flex="~ row" items-center px-1>
+      <el-page-header content="账单详情" title="首页" flex-1 @back="handleHeaderBack">
+        <template #extra>
+          <div class="flex items-center">
+            <el-button type="danger" link :icon="Delete" @click="handleDeleteBill" />
+          </div>
+        </template>
+      </el-page-header>
     </el-header>
     <el-main>
       <el-skeleton :rows="5" :loading="loading" animated>

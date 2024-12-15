@@ -2,6 +2,7 @@
 import { ElMessage } from 'element-plus'
 import { getBill, updateBill } from '~/api/modules/bill'
 import type { BillEntity } from '~/types/entity'
+import bus from '~/utils/event-bus'
 
 const props = defineProps<{
   modelValue: number
@@ -31,6 +32,7 @@ function handleUpdateBill() {
     if (valid) {
       updateBill(form.value).then(() => {
         ElMessage.success('更新成功')
+        bus.emit('reflash-bill-list')
         handleClose()
       })
     }
@@ -45,7 +47,6 @@ watchEffect(() => {
 })
 function handleClose() {
   formRef.value?.resetFields()
-  props.onClose()
   emit('update:open', false)
 }
 </script>

@@ -8,7 +8,7 @@ const routes = [{
     name: 'desk-home',
     component: () => import('~/views/index.vue'),
   }, {
-    path: 'detail/:billId',
+    path: 'detail',
     name: 'desk-bill-detail',
     component: () => import('~/views/bill/detail.vue'),
   }],

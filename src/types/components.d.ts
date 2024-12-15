@@ -9,6 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     AddBill: typeof import('./../components/bill/AddBill.vue')['default']
     AddUser: typeof import('./../components/user/AddUser.vue')['default']
+    BillDetail: typeof import('./../components/bill/BillDetail.vue')['default']
     BillList: typeof import('./../components/bill/BillList.vue')['default']
     copy: typeof import('./../components/user/AddUser copy.vue')['default']
     ElAffix: typeof import('element-plus/es')['ElAffix']
@@ -16,6 +17,7 @@ declare module 'vue' {
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElBacktop: typeof import('element-plus/es')['ElBacktop']
     ElButton: typeof import('element-plus/es')['ElButton']
+    ElCol: typeof import('element-plus/es')['ElCol']
     ElConfigProvider: typeof import('element-plus/es')['ElConfigProvider']
     ElContainer: typeof import('element-plus/es')['ElContainer']
     ElDatePicker: typeof import('element-plus/es')['ElDatePicker']
@@ -37,6 +39,7 @@ declare module 'vue' {
     ElPageHeader: typeof import('element-plus/es')['ElPageHeader']
     ElRadio: typeof import('element-plus/es')['ElRadio']
     ElRadioGroup: typeof import('element-plus/es')['ElRadioGroup']
+    ElRow: typeof import('element-plus/es')['ElRow']
     ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
     ElSkeleton: typeof import('element-plus/es')['ElSkeleton']
     ElSpace: typeof import('element-plus/es')['ElSpace']

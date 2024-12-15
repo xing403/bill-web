@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import * as echarts from 'echarts';
+import * as echarts from 'echarts'
+
 const props = defineProps<{
-  list: Array<any>,
+  list: Array<any>
 }>()
 const list = toRef(props, 'list')
 
 const colors = ['#EE6666', '#91CC75', '#5470C6']
-const handle = () => {
+function handle() {
   nextTick(() => {
-    var myChart = echarts.init(document.getElementById('statistic-year-line')!);
+    const myChart = echarts.init(document.getElementById('statistic-year-line')!)
     myChart.setOption({
       color: colors,
       grid: { top: '80px', left: '20px', right: '20px', bottom: '20px', containLabel: true },
@@ -42,15 +43,13 @@ const handle = () => {
 }
 
 watchEffect(() => {
-  if (list.value.length > 0) {
+  if (list.value.length > 0)
     handle()
-  }
 })
-
 </script>
 
 <template>
   <div>
-    <div id="statistic-year-line" h-350px></div>
+    <div id="statistic-year-line" h-350px />
   </div>
 </template>

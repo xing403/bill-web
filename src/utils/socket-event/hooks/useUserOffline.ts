@@ -1,4 +1,3 @@
-import useUserStore from '~/pinia/modules/user'
 import { ElNotification } from 'element-plus'
 
 /**
@@ -6,11 +5,11 @@ import { ElNotification } from 'element-plus'
  * @returns
  */
 
-const useUserOffline = () => {
+function useUserOffline() {
   const userStore = useUserStore()
   ElNotification.warning({
-    title: "你已被强制下线",
-    message: "请重新登录"
+    title: '你已被强制下线',
+    message: '请重新登录',
   })
   return userStore.handleUserLogout()
 }

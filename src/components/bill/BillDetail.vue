@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Delete, Edit } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { deleteBill, getBill } from '~/api/modules/bill'
 import type { BillVOEntity } from '~/types/entity'
 import bus from '~/utils/event-bus'
 

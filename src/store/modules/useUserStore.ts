@@ -1,14 +1,10 @@
 import type { RemovableRef } from '@vueuse/core'
 import { defineStore } from 'pinia'
-import useSocketStore from './socket'
-import userApi from '~/api/modules/user'
 
 import bus from '~/utils/event-bus'
 import useSocketEvent from '~/utils/socket-event'
 
 export default defineStore('user', () => {
-  const router = useRouter()
-
   const token = ref<RemovableRef<string>>(useLocalStorage('token', '', { deep: true }))
   const information = ref<any>(null)
 
@@ -20,14 +16,14 @@ export default defineStore('user', () => {
     const form = new FormData()
     form.append('username', username)
     form.append('password', password)
-    return userApi.login(form).then(({ data }) => {
+    return login(form).then(({ data }) => {
       token.value = data
     })
   }
 
   const getUserInformation = () => {
     bus.on('user.event.offline', socketEvent.useUserOffline)
-    return userApi.getUserInfo().then(({ data }) => {
+    return getUserInfo().then(({ data }) => {
       information.value = data
       if (import.meta.env.VITE_APP_WS_PATH) {
         socketStore.connect(import.meta.env.VITE_APP_WS_PATH, token.value, (frames) => {
@@ -40,21 +36,18 @@ export default defineStore('user', () => {
   }
 
   const reLogin = () => {
+    const route = useRoute()
+
     token.value = null
     information.value = null
-    router.replace({
-      name: 'login',
-      query: {
-        redirect: router.currentRoute.value.fullPath,
-      },
-    })
+    bus.emit('re-login', route.path)
   }
 
   const handleUserLogout = () => {
-    return userApi.logout().then(() => {
+    return logout().then(() => {
       bus.off('user.event.offline')
       reLogin()
-    }).catch((err) => { })
+    }).catch(() => { })
   }
 
   return {

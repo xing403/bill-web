@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ElMessage } from 'element-plus'
-import userApi from '~/api/modules/user'
+
 const props = defineProps<{
-  open: boolean,
+  open: boolean
   onClose: () => void
 }>()
 const emit = defineEmits(['update:open'])
@@ -18,17 +18,17 @@ const rules = {
     { required: true, message: '请输入账号密码', trigger: 'blur' },
   ],
 }
-const handleAddUser = () => {
+function handleAddUser() {
   formRef.value.validate((valid: boolean) => {
     if (valid) {
-      userApi.addUser(form.value).then(() => {
+      addUser(form.value).then(() => {
         ElMessage.success('添加成功')
         handleClose()
       })
     }
   })
 }
-const handleClose = () => {
+function handleClose() {
   formRef.value?.resetFields()
   props.onClose()
   emit('update:open', false)
@@ -36,9 +36,11 @@ const handleClose = () => {
 </script>
 
 <template>
-  <el-dialog title="新增用户" v-model="model" :before-close="handleClose" :close-on-press-escape="false"
-    :close-on-click-modal="false">
-    <el-form :model="form" ref="formRef" :rules="rules" label-position="top">
+  <el-dialog
+    v-model="model" title="新增用户" :before-close="handleClose" :close-on-press-escape="false"
+    :close-on-click-modal="false"
+  >
+    <el-form ref="formRef" :model="form" :rules="rules" label-position="top">
       <el-form-item label="用户名" prop="username">
         <el-input v-model="form.username" />
       </el-form-item>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Loading, Plus } from '@element-plus/icons-vue'
-import { getBillList } from '~/api/modules/bill'
+
 import type { BillVOEntity } from '~/types/entity'
 import bus from '~/utils/event-bus'
 

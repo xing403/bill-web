@@ -1,4 +1,5 @@
-import { Client, IFrame } from '@stomp/stompjs';
+import type { IFrame } from '@stomp/stompjs'
+import { Client } from '@stomp/stompjs'
 import { defineStore } from 'pinia'
 import bus from '~/utils/event-bus'
 
@@ -13,9 +14,9 @@ export default defineStore('socket', () => {
   const connect = (url: string, token: string, onConnect?: (frames: IFrame) => void) => {
     client.value = new Client({
       brokerURL: `${url}?token=${token}`,
-      onConnect
-    });
-    client.value.activate();
+      onConnect,
+    })
+    client.value.activate()
     return client
   }
   /**
@@ -24,12 +25,12 @@ export default defineStore('socket', () => {
    * @param topic
    * @param callback
    */
-  const subscribe = (topic: string, callback?: (params?: any) => {}) => {
+  const subscribe = (topic: string, callback?: (params?: any) => void) => {
     client.value?.subscribe(topic, (socketMessage) => {
       const { eventName, message } = JSON.parse(socketMessage.body)
-      const event = eventName.split("/").filter((item: string) => item !== '').join(".")
+      const event = eventName.split('/').filter((item: string) => item !== '').join('.')
       callback ? callback(message) : bus.emit(event, message)
-    });
+    })
   }
   /**
    * cancel subscribe topic
@@ -38,7 +39,7 @@ export default defineStore('socket', () => {
    */
 
   const unsubscribe = (topic: string) => {
-    client.value?.unsubscribe(topic);
+    client.value?.unsubscribe(topic)
   }
   /**
    * publish socket message
@@ -47,7 +48,7 @@ export default defineStore('socket', () => {
    * @param body
    */
   const publish = (topic: string, body: string) => {
-    client.value?.publish({ destination: topic, body });
+    client.value?.publish({ destination: topic, body })
   }
 
   return {
@@ -58,5 +59,4 @@ export default defineStore('socket', () => {
     unsubscribe,
     publish,
   }
-
 })

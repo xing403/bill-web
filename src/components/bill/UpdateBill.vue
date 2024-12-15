@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ElMessage } from 'element-plus'
-import { getBill, updateBill } from '~/api/modules/bill'
 import type { BillEntity } from '~/types/entity'
 import bus from '~/utils/event-bus'
 

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import RightTool from './RightTool.vue'
-import useUserStore from '~/pinia/modules/user'
 
 const router = useRouter()
 const userStore = useUserStore()

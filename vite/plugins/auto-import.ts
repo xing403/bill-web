@@ -14,7 +14,8 @@ export default function createAutoImport() {
     ],
     dts: 'src/types/auto-import.d.ts',
     dirs: [
-      './src/composables',
+      './src/api/modules',
+      './src/store/modules',
     ],
     vueTemplate: true,
   })

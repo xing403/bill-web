@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
-import useUserStore from '~/pinia/modules/user'
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_URL,

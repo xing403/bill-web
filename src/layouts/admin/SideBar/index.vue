@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const route = useRoute()
-const defaultActive = computed(() => route.name)
+const defaultActive = computed(() => route.name as string)
 </script>
 
 <template>

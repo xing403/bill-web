@@ -1,8 +1,5 @@
 <script setup lang="ts">
 import { ElMessage } from 'element-plus'
-
-import userApi from '~/api/modules/user'
-import useUserStore from '~/pinia/modules/user'
 import QRCode from '~/components/QRCode/index.vue'
 
 const route = useRoute()

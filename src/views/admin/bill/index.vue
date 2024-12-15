@@ -1,6 +1,5 @@
 <script setup lang="ts" generic="T extends any, O extends any">
 import { ElMessage, dayjs } from 'element-plus'
-import billApi, { getBillList } from '~/api/modules/bill'
 import type { BillVOEntity } from '~/types/entity'
 import bus from '~/utils/event-bus'
 
@@ -30,7 +29,7 @@ function handleUpdateBill(billId: number) {
   showUpdateBill.value = !showUpdateBill.value
 }
 function handleDeleteBill(billId: number) {
-  billApi.deleteBill(billId).then(() => {
+  deleteBill(billId).then(() => {
     ElMessage.success('删除成功')
     handleGetBillList()
   })

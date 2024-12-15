@@ -1,7 +1,7 @@
-import useUserOffline from "./hooks/useUserOffline"
+import useUserOffline from './hooks/useUserOffline'
 
 export default function useSocketEvent() {
   return {
-    useUserOffline
+    useUserOffline,
   }
 }

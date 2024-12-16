@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ElMessage } from 'element-plus'
-import type { BillEntity } from '~/types/entity'
 import bus from '~/utils/event-bus'
 
 const emit = defineEmits(['update:modelValue'])

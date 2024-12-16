@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { ElMessage, ElMessageBox, dayjs } from 'element-plus'
+import bus from '~/utils/event-bus'
 
 const loading = ref(false)
 const pageNum = ref(1)
 const pageSize = ref(10)
 const total = ref(0)
-const list = ref([])
+const list = ref<UserVOEntity[]>([])
 
 const addUserDialog = ref(false)
 const updateUserDialog = ref(false)
@@ -45,9 +46,8 @@ async function confirmEnableOrDisable() {
   })
   return result === 'confirm'
 }
-async function handleEnableOrDisableUser(userId: number, state: string | number | boolean) {
-  const handle = state === '1' ? disableUserByUserId : enableUserByUserId
-  handle(userId).then(() => {
+async function handleEnableOrDisableUser(userId: number, state: string) {
+  modifyUser(userId, { locked: state }).then(() => {
     ElMessage.success('操作成功')
   }).catch((error: string) => {
     ElMessage.error(error)
@@ -58,6 +58,10 @@ async function handleEnableOrDisableUser(userId: number, state: string | number 
 
 onMounted(() => {
   handleGetUserList()
+  bus.on('reflash-user-list-admin', handleGetUserList)
+})
+onUnmounted(() => {
+  bus.off('reflash-user-list-admin', handleGetUserList)
 })
 </script>
 
@@ -75,9 +79,6 @@ onMounted(() => {
         </el-button>
       </div>
     </div>
-
-    <AddUser v-model:open="addUserDialog" :on-close="handleGetUserList" />
-
     <el-table v-loading="loading" :data="list" stripe border width="100%" row-key="uuid">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column type="index" width="80" label="编号" align="center" />
@@ -99,7 +100,7 @@ onMounted(() => {
           <el-switch
             v-model="row.locked" style=" --el-switch-off-color: #ff4949" inline-prompt active-text="启用"
             inactive-text="停用" active-value="0" inactive-value="1" :before-change="confirmEnableOrDisable"
-            @change="(val: string | number | boolean) => handleEnableOrDisableUser(row.id, val)"
+            @change="(val: string | number | boolean) => handleEnableOrDisableUser(row.id, val.toString())"
           />
         </template>
       </el-table-column>
@@ -134,6 +135,8 @@ onMounted(() => {
         :page-size="pageSize" @current-change="handleGetUserList"
       />
     </div>
-    <UpdateUser v-model="currentUserId" v-model:open="updateUserDialog" :on-close="handleGetUserList" />
+
+    <insert-user-comp v-model:open="addUserDialog" />
+    <update-user-comp v-model="currentUserId" v-model:open="updateUserDialog" />
   </div>
 </template>

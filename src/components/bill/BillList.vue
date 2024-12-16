@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { Loading, Plus } from '@element-plus/icons-vue'
-
-import type { BillVOEntity } from '~/types/entity'
 import bus from '~/utils/event-bus'
 
 const { width } = useWindowSize()

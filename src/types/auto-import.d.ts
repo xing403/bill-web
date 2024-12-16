@@ -6,7 +6,6 @@
 export {}
 declare global {
   const EffectScope: typeof import('vue')['EffectScope']
-  const addUser: typeof import('../api/modules/user-api')['addUser']
   const asyncComputed: typeof import('@vueuse/core')['asyncComputed']
   const autoResetRef: typeof import('@vueuse/core')['autoResetRef']
   const billApi: typeof import('../api/modules/bill-api')['default']
@@ -46,14 +45,15 @@ declare global {
   const getCurrentScope: typeof import('vue')['getCurrentScope']
   const getLoginQRCode: typeof import('../api/modules/user-api')['getLoginQRCode']
   const getQRCodInformation: typeof import('../api/modules/user-api')['getQRCodInformation']
+  const getUser: typeof import('../api/modules/user-api')['getUser']
   const getUserInfo: typeof import('../api/modules/user-api')['getUserInfo']
-  const getUserInfoByUserId: typeof import('../api/modules/user-api')['getUserInfoByUserId']
   const getUserList: typeof import('../api/modules/user-api')['getUserList']
   const h: typeof import('vue')['h']
   const ignorableWatch: typeof import('@vueuse/core')['ignorableWatch']
   const inject: typeof import('vue')['inject']
   const injectLocal: typeof import('@vueuse/core')['injectLocal']
   const insertBill: typeof import('../api/modules/bill-api')['insertBill']
+  const insertUser: typeof import('../api/modules/user-api')['insertUser']
   const isDefined: typeof import('@vueuse/core')['isDefined']
   const isProxy: typeof import('vue')['isProxy']
   const isReactive: typeof import('vue')['isReactive']
@@ -64,6 +64,7 @@ declare global {
   const makeDestructurable: typeof import('@vueuse/core')['makeDestructurable']
   const markRaw: typeof import('vue')['markRaw']
   const messageApi: typeof import('../api/modules/message-api')['default']
+  const modifyUser: typeof import('../api/modules/user-api')['modifyUser']
   const nextTick: typeof import('vue')['nextTick']
   const onActivated: typeof import('vue')['onActivated']
   const onBeforeMount: typeof import('vue')['onBeforeMount']
@@ -326,7 +327,6 @@ import { UnwrapRef } from 'vue'
 declare module 'vue' {
   interface ComponentCustomProperties {
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
-    readonly addUser: UnwrapRef<typeof import('../api/modules/user-api')['addUser']>
     readonly asyncComputed: UnwrapRef<typeof import('@vueuse/core')['asyncComputed']>
     readonly autoResetRef: UnwrapRef<typeof import('@vueuse/core')['autoResetRef']>
     readonly billApi: UnwrapRef<typeof import('../api/modules/bill-api')['default']>
@@ -354,10 +354,8 @@ declare module 'vue' {
     readonly defineComponent: UnwrapRef<typeof import('vue')['defineComponent']>
     readonly deleteBill: UnwrapRef<typeof import('../api/modules/bill-api')['deleteBill']>
     readonly deleteUser: UnwrapRef<typeof import('../api/modules/user-api')['deleteUser']>
-    readonly disableUserByUserId: UnwrapRef<typeof import('../api/modules/user-api')['disableUserByUserId']>
     readonly eagerComputed: UnwrapRef<typeof import('@vueuse/core')['eagerComputed']>
     readonly effectScope: UnwrapRef<typeof import('vue')['effectScope']>
-    readonly enableUserByUserId: UnwrapRef<typeof import('../api/modules/user-api')['enableUserByUserId']>
     readonly extendRef: UnwrapRef<typeof import('@vueuse/core')['extendRef']>
     readonly getAllLoginUser: UnwrapRef<typeof import('../api/modules/user-api')['getAllLoginUser']>
     readonly getBill: UnwrapRef<typeof import('../api/modules/bill-api')['getBill']>
@@ -366,14 +364,15 @@ declare module 'vue' {
     readonly getCurrentScope: UnwrapRef<typeof import('vue')['getCurrentScope']>
     readonly getLoginQRCode: UnwrapRef<typeof import('../api/modules/user-api')['getLoginQRCode']>
     readonly getQRCodInformation: UnwrapRef<typeof import('../api/modules/user-api')['getQRCodInformation']>
+    readonly getUser: UnwrapRef<typeof import('../api/modules/user-api')['getUser']>
     readonly getUserInfo: UnwrapRef<typeof import('../api/modules/user-api')['getUserInfo']>
-    readonly getUserInfoByUserId: UnwrapRef<typeof import('../api/modules/user-api')['getUserInfoByUserId']>
     readonly getUserList: UnwrapRef<typeof import('../api/modules/user-api')['getUserList']>
     readonly h: UnwrapRef<typeof import('vue')['h']>
     readonly ignorableWatch: UnwrapRef<typeof import('@vueuse/core')['ignorableWatch']>
     readonly inject: UnwrapRef<typeof import('vue')['inject']>
     readonly injectLocal: UnwrapRef<typeof import('@vueuse/core')['injectLocal']>
     readonly insertBill: UnwrapRef<typeof import('../api/modules/bill-api')['insertBill']>
+    readonly insertUser: UnwrapRef<typeof import('../api/modules/user-api')['insertUser']>
     readonly isDefined: UnwrapRef<typeof import('@vueuse/core')['isDefined']>
     readonly isProxy: UnwrapRef<typeof import('vue')['isProxy']>
     readonly isReactive: UnwrapRef<typeof import('vue')['isReactive']>
@@ -384,6 +383,7 @@ declare module 'vue' {
     readonly makeDestructurable: UnwrapRef<typeof import('@vueuse/core')['makeDestructurable']>
     readonly markRaw: UnwrapRef<typeof import('vue')['markRaw']>
     readonly messageApi: UnwrapRef<typeof import('../api/modules/message-api')['default']>
+    readonly modifyUser: UnwrapRef<typeof import('../api/modules/user-api')['modifyUser']>
     readonly nextTick: UnwrapRef<typeof import('vue')['nextTick']>
     readonly onActivated: UnwrapRef<typeof import('vue')['onActivated']>
     readonly onBeforeMount: UnwrapRef<typeof import('vue')['onBeforeMount']>

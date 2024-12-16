@@ -43,19 +43,6 @@ onMounted(() => {
       <el-table-column type="index" width="80" label="编号" align="center" />
       <el-table-column label="用户ID" prop="uuid" width="300" align="center" />
       <el-table-column label="用户名" prop="username" />
-      <el-table-column label="类型" prop="billType" width="120" align="center">
-        <template #default="{ row }">
-          <el-tag v-if="row.billType === 'spend'" type="warning">
-            支出
-          </el-tag>
-          <el-tag v-else-if="row.billType === 'income'" type="warning">
-            收入
-          </el-tag>
-          <el-tag v-else type="info">
-            其他
-          </el-tag>
-        </template>
-      </el-table-column>
       <el-table-column
         label="上次登录时间" prop="loginTime" width="180" align="center"
         :formatter="(row: any) => dayjs(row.loginTime).format('YYYY-MM-DD HH:mm:ss')"

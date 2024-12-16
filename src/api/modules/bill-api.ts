@@ -1,25 +1,19 @@
 import api from '..'
-import type { BillEntity, BillVOEntity } from '~/types/entity'
 
-interface GetListParamsType {
-  pageNum?: number
-  pageSize?: number
-}
-
-export function getBillList(params: GetListParamsType): Promise<PromiseResponseTableVO<BillVOEntity>> {
+export function getBillList(params: GetListParamsType): ResponsePage<BillVOEntity> {
   return api.get('/bill', { params })
 }
-export function insertBill(data: BillEntity): Promise<PromiseResponse<null>> {
+export function insertBill(data: BillEntity): ResponseEntity<null> {
   return api.post('/bill', data)
 }
-export function updateBill(data: BillEntity): Promise<PromiseResponse<null>> {
+export function updateBill(data: BillEntity): ResponseEntity<null> {
   return api.put('/bill', data)
 }
 
-export function deleteBill(billId: number): Promise<PromiseResponse<null>> {
+export function deleteBill(billId: number): ResponseEntity<null> {
   return api.delete(`/bill/${billId}`)
 }
-export function getBill(billId: number): Promise<PromiseResponse<BillVOEntity>> {
+export function getBill(billId: number): ResponseEntity<BillVOEntity> {
   return api.get(`/bill/${billId}`)
 }
 

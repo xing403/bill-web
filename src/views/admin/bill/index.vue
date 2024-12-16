@@ -1,6 +1,5 @@
 <script setup lang="ts" generic="T extends any, O extends any">
 import { ElMessage, dayjs } from 'element-plus'
-import type { BillVOEntity } from '~/types/entity'
 import bus from '~/utils/event-bus'
 
 const pageNum = ref(1)
@@ -109,7 +108,7 @@ onUnmounted(() => {
       />
     </div>
 
-    <AddBill v-model="showAddBill" />
-    <UpdateBill v-model="updateBillId" v-model:open="showUpdateBill" />
+    <insert-bill-comp v-model="showAddBill" />
+    <update-bill-comp v-model="updateBillId" v-model:open="showUpdateBill" />
   </div>
 </template>

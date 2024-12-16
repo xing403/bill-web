@@ -5,7 +5,7 @@ interface BaseEntity {
   updateTime?: string | Date
   delFlag: string | number
 }
-export interface BillEntity {
+interface BillEntity {
   billId?: number
   billAmount: number | undefined
   billTitle: string
@@ -13,4 +13,17 @@ export interface BillEntity {
   billTime: string | Date
 }
 
-export type BillVOEntity = BillEntity & BaseEntity
+type BillVOEntity = BillEntity & BaseEntity
+
+
+interface UserEntity {
+  userId?: number
+  username: string
+  password?: string
+  nickname: string
+  avatar: string
+  isAdmin: string
+  locked: string
+}
+
+type UserVOEntity = UserEntity & BaseEntity

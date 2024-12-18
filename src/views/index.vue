@@ -1,19 +1,20 @@
 <script setup lang="ts">
+import BillList from './pages/BillList.vue'
+import UserPage from './pages/UserPage.vue'
 import DeskFooter from '~/layouts/desk/DeskFooter.vue'
 
 const route = useRoute()
 const viewId = ref('')
-const isFill = computed(() => ['my'].includes(viewId.value))
-watch(() => route.query.tab, (val: any) => {
-  viewId.value = val?.toString() ?? 'bill'
+const isFill = computed(() => ['desk-home-my'].includes(viewId.value))
+watch(() => route.name, (val: any) => {
+  viewId.value = val?.toString() ?? 'desk-home'
 }, {
   immediate: true,
 })
 </script>
 
 <template>
-  <bill-list v-if="viewId === 'bill'" />
-  <el-empty v-if="viewId === 'my'" description="开发中..." />
-
+  <BillList v-if="viewId === 'desk-home'" />
+  <UserPage v-if="viewId === 'desk-home-my'" />
   <DeskFooter v-model:fill="isFill" />
 </template>

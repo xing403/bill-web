@@ -101,7 +101,7 @@ function handleAddBill(event: MouseEvent) {
     </div>
   </div>
   <div>
-    <add-bill v-model="addBillDialog" />
+    <insert-bill-comp v-model="addBillDialog" />
     <el-backtop :right="20" :bottom="100" :visibility-height="0" @click="handleAddBill">
       <el-icon>
         <Plus />

@@ -23,7 +23,7 @@ router.beforeEach(async (to, from, next) => {
   }
 })
 
-bus.on('re-login', (redirect: any) => {
+bus.on('re-login', (redirect: string) => {
   router.replace({
     name: 'login',
     query: {

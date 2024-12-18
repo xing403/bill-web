@@ -10,19 +10,19 @@ const router = useRouter()
 const segmented = ref(route.query.tab?.toString() ?? 'bill')
 const segmentedOptions = ref([{
   label: '账单',
-  value: 'bill',
+  value: 'desk-home',
   icon: markRaw(List),
 }, {
   label: '我的',
-  value: 'my',
+  value: 'desk-home-my',
   icon: markRaw(UserFilled),
 }])
 
-function handleChangeFooter(value: string | number) {
+function handleChangeFooter(value: string) {
   router.replace({
+    name: value,
     query: {
       ...route.query,
-      tab: value,
     },
   })
 }

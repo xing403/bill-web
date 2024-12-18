@@ -5,6 +5,7 @@ import bus from '~/utils/event-bus'
 import useSocketEvent from '~/utils/socket-event'
 
 export default defineStore('user', () => {
+  const route = useRoute()
   const token = ref<RemovableRef<string>>(useLocalStorage('token', '', { deep: true }))
   const information = ref<any>(null)
 
@@ -36,16 +37,14 @@ export default defineStore('user', () => {
   }
 
   const reLogin = () => {
-    const route = useRoute()
-
     token.value = null
     information.value = null
+    bus.off('user.event.offline')
     bus.emit('re-login', route.path)
   }
 
   const handleUserLogout = () => {
     return logout().then(() => {
-      bus.off('user.event.offline')
       reLogin()
     }).catch(() => { })
   }

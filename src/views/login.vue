@@ -8,6 +8,7 @@ const router = useRouter()
 const userStore = useUserStore()
 
 const redirect = ref(route.query.redirect?.toString() ?? '/')
+const search = ref(route.query.search?.toString() ?? '')
 const formType = ref<'login' | 'register'>('login')
 
 const loginForm = ref({
@@ -106,15 +107,15 @@ watchEffect(() => {
 
 <template>
   <div flex="~ row" justify="center" h-full min-h-300px>
-    <div flex-1 />
-    <div
-      v-if="formType === 'login'" class="login-content" flex="~ col"
-      b-l="1px light:hex-DCDFE4 dark:hex-4C4D4E" w-340px items-center justify-center p-1
-    >
+    <div flex-1 class="hidden-sm-and-down" b-r="1px light:hex-DCDFE4 dark:hex-4C4D4E" />
+    <div v-if="formType === 'login'" class="login-content" flex="~ col" w-340px items-center justify-center p-1>
       <div m-b-5 text-center text-xl>
         欢迎使用账单管理系统
       </div>
-      <el-form ref="loginFormRef" :model="loginForm" :rules="loginFormRules" label-position="top" w-240px :inline="false">
+      <el-form
+        ref="loginFormRef" :model="loginForm" :rules="loginFormRules" label-position="top" w-240px
+        :inline="false"
+      >
         <el-form-item prop="username">
           <el-input v-model="loginForm.username" placeholder="请输入用户名" />
         </el-form-item>
@@ -142,8 +143,8 @@ watchEffect(() => {
     </div>
 
     <div
-      v-if="formType === 'register'" class="login-content" flex="~ col"
-      b-l="1px light:hex-DCDFE4 dark:hex-4C4D4E" w-340px items-center justify-center p-1
+      v-if="formType === 'register'" class="login-content" flex="~ col" b-l="1px light:hex-DCDFE4 dark:hex-4C4D4E"
+      w-340px items-center justify-center p-1
     >
       <div m-b-5 text-center text-xl>
         欢迎注册账单管理系统

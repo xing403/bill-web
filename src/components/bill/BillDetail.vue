@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Delete, Edit } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import type { BillVOEntity } from '~/types/entity'
 import bus from '~/utils/event-bus'
 
 const props = withDefaults(defineProps<{
@@ -102,7 +101,7 @@ watch(() => route.query.billId, () => {
               </el-radio-group>
             </el-form-item>
           </el-form>
-          <update-bill v-model:open="openEdit" v-model="billId" />
+          <update-bill-comp v-model:open="openEdit" v-model="billId" />
         </template>
         <el-empty v-else />
       </el-skeleton>

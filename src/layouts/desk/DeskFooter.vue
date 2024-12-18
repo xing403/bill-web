@@ -7,7 +7,7 @@ defineProps<{
 const { width } = useWindowSize()
 const route = useRoute()
 const router = useRouter()
-const segmented = ref(route.query.tab?.toString() ?? 'bill')
+const segmented = ref(route.name?.toString() ?? 'desk-home')
 const segmentedOptions = ref([{
   label: '账单',
   value: 'desk-home',
@@ -29,7 +29,7 @@ function handleChangeFooter(value: string) {
 </script>
 
 <template>
-  <div fixed bottom-0 left-0 h-65px w-full :class="{ 'max-w-350px': !fill && width >= 768 }">
+  <div class="desk-footer" fixed bottom-0 left-0 h-65px w-full :class="{ 'max-w-350px': !fill && width >= 768 }">
     <el-segmented v-model="segmented" :options="segmentedOptions" block @change="handleChangeFooter">
       <template #default="{ item }: any">
         <div flex flex-col items-center gap-2 p-2>
@@ -42,3 +42,10 @@ function handleChangeFooter(value: string) {
     </el-segmented>
   </div>
 </template>
+
+<style scoped>
+.desk-footer .el-segmented {
+  --el-segmented-item-selected-color: var(--el-color-primary);
+  --el-segmented-item-selected-bg-color: var(--el-color-info-light-9);
+}
+</style>
